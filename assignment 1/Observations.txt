@@ -1,0 +1,52 @@
+Part 1:
+Subsection 1:
+	Not much change in the image
+Subsection 2:
+	wrote python code from scratch using bilinear interpolation to rotate the image. - Scratch_rotation - part 1 subsection 2.ipynb
+	few pixels don't show up on the image at corners
+Subsection 3:
+	wrote python code from scratch using bilinear interpolation to rotate the image. - Scratch_rotation - part 1 subsection-3.ipynb
+	for 1.4 scaling - image height and width increased but accuracy of image decreased
+	for 0.4 scaling = image height and width decreased
+
+part 2:
+Used inbuilt function of PIL module to get histogram equalised image - Part 1 and 2 using inbuilt functions.ipynb
+
+Consider an image whose pixel values are confined to some specific range of values only. For eg, brighter image will have all pixels confined to high values. But a good image will have pixels from all regions of the image. So you need to stretch this histogram to either ends and that is what Histogram Equalization does (in simple words). This normally improves the contrast of the image.
+
+psuedo code
+import numpy as np 
+
+def imhist(im):
+  # calculates normalized histogram of an image
+	m, n = im.shape
+	h = [0.0] * 256
+	for i in range(m):
+		for j in range(n):
+			h[im[i, j]]+=1
+	return np.array(h)/(m*n)
+
+def cumsum(h):
+	# finds cumulative sum of a numpy array, list
+	return [sum(h[:i+1]) for i in range(len(h))]
+
+def histeq(im):
+	#calculate Histogram
+	h = imhist(im)
+	cdf = np.array(cumsum(h)) #cumulative distribution function
+	sk = np.uint8(255 * cdf) #finding transfer function values
+	s1, s2 = im.shape
+	Y = np.zeros_like(im)
+	# applying transfered values for each pixels
+	for i in range(0, s1):
+		for j in range(0, s2):
+			Y[i, j] = sk[im[i, j]]
+	H = imhist(Y)
+	#return transformed image, original and new istogram, 
+	# and transform function
+	return Y , h, H, sk
+	
+
+
+part 3:
+PSNR scores are well tabulated in Part3.ipynb file
